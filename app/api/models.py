@@ -135,3 +135,6 @@ class Contact(models.Model):
         verbose_name='作成日時', auto_now_add=True)
     updated_at = models.DateTimeField(
         verbose_name='更新日時', auto_now=True)
+    
+    def __str__(self):
+        return self.company.name + '_' + str(self.course)
