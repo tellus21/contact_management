@@ -33,8 +33,11 @@ import {
   Business as BusinessIcon,
   RecentActors as RecentActorsIcon,
   LocalHospital as LocalHospitalIcon,
+  FeaturedPlayList as FeaturedPlayListIcon,
+
+  Contacts as ContactsIcon
 } from "@material-ui/icons";
-import Copyright from "./Copyright"
+// import Copyright from "./Copyright"
 
 const drawerWidth = 240;
 
@@ -146,18 +149,18 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-// const Copyright = () => {
-//   return (
-//     <Typography variant="body2" color="textSecondary" align="center">
-//       {"Copyright © "}
-//       <Link color="inherit" to="/">
-//         進捗管理システム
-//       </Link>{" "}
-//       {new Date().getFullYear()}
-//       {"."}
-//     </Typography>
-//   );
-// };
+const Copyright = () => {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {"Copyright © "}
+      <Link color="inherit" to="/">
+        契約管理システム
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+};
 
 export interface GenericTemplateProps {
   children: React.ReactNode;
@@ -205,7 +208,7 @@ const GenericTemplate: React.FC<GenericTemplateProps> = ({
               noWrap
               className={classes.title}
             >
-              進捗管理システム
+              契約管理システム
             </Typography>
           </Toolbar>
         </AppBar>
@@ -226,9 +229,9 @@ const GenericTemplate: React.FC<GenericTemplateProps> = ({
             <Link to="/" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
-                  <ScheduleIcon />
+                  <ContactsIcon />
                 </ListItemIcon>
-                <ListItemText primary="進捗管理" />
+                <ListItemText primary="契約管理" />
               </ListItem>
             </Link>
             <Link to="/companies" className={classes.link}>
@@ -239,36 +242,28 @@ const GenericTemplate: React.FC<GenericTemplateProps> = ({
                 <ListItemText primary="企業マスタ" />
               </ListItem>
             </Link>
-            <Link to="/company_reservations" className={classes.link}>
+            <Link to="/courses" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
-                  <EventAvailableIcon />
+                  <FeaturedPlayListIcon />
                 </ListItemIcon>
-                <ListItemText primary="企業予約マスタ" />
+                <ListItemText primary="コースマスタ" />
+              </ListItem>
+            </Link>
+            <Link to="/options" className={classes.link}>
+              <ListItem button>
+                <ListItemIcon>
+                  <LocalHospitalIcon />
+                </ListItemIcon>
+                <ListItemText primary="オプションマスタ" />
               </ListItem>
             </Link>
             <Link to="/users" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
-                  <AccountCircleIcon />
+                <AccountCircleIcon />
                 </ListItemIcon>
                 <ListItemText primary="ユーザマスタ" />
-              </ListItem>
-            </Link>
-            <Link to="/docktors" className={classes.link}>
-              <ListItem button>
-                <ListItemIcon>
-                  <FaceIcon />
-                </ListItemIcon>
-                <ListItemText primary="医師マスタ" />
-              </ListItem>
-            </Link>
-            <Link to="/courses" className={classes.link}>
-              <ListItem button>
-                <ListItemIcon>
-                  <LocalHospitalIcon />
-                </ListItemIcon>
-                <ListItemText primary="コースマスタ" />
               </ListItem>
             </Link>
           </List>
