@@ -11,6 +11,6 @@ export interface POST_OPTION {
 
 export interface OPTION_STATE {
     options: READ_OPTION[];
-    editedTask: POST_OPTION;
-    selectedTask: READ_OPTION;
+    editedOption: POST_OPTION;
+    selectedOption: READ_OPTION;
   }
