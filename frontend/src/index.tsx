@@ -1,20 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+// import './index.css';
 import { store } from './app/store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { index as options } from "./pages/options"
+import Companies from "./pages/companies/Companies"
+import Contacts from "./pages/contacts/Contacts"
+import Courses from "./pages/courses/Courses"
+import Options from "./pages/options/Options"
+import Users from "./pages/user/Users"
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <Router>
         <Switch>
-          <Route path="/options" component={options} exact />
-          <App />
+          <Route path="/" component={Contacts} exact />
+          <Route path="/companies" component={Companies} exact />
+          <Route path="/courses" component={Courses} exact />
+          <Route path="/options" component={Options} exact />
+          <Route path="/users" component={Users} exact />
         </Switch>
       </Router>
     </Provider>
