@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import MaterialTable from "material-table";
@@ -6,7 +7,18 @@ import GenericTemplate from "../../common/templates/GenericTemplate";
 import axios from "axios";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import { OPTION_STATE, POST_OPTION, READ_OPTION } from "./optionTypes"
+import { OPTION_STATE, POST_OPTION, READ_OPTION } from "./optionTypes";
+import OptionFormDialog from "./components/OptionFormDialog";
+import {
+  fetchAsyncGetOptions,
+  fetchAsyncCreateOption,
+  fetchAsyncDeleteOption,
+  fetchAsyncUpdateOption,
+  selectEditedOption,
+} from "./optionSlice";
+import { AppDispatch } from "../../app/store";
+import { Rowing } from "@material-ui/icons";
+import OptionModal from "./components/OptionModal";
 
 type Props = {} & RouteComponentProps<{}>;
 
@@ -27,6 +39,8 @@ const targetURL = `${process.env.REACT_APP_API_URL}/api/options/`;
 
 const DocktorIndex: React.FC<Props> = () => {
   const classes = useStyles();
+  const dispatch: AppDispatch = useDispatch();
+  const editedOption = useSelector(selectEditedOption);
   const [entries, setEntries] = useState({
     data: [
       {
@@ -63,6 +77,8 @@ const DocktorIndex: React.FC<Props> = () => {
 
   return (
     <GenericTemplate title={""}>
+      <OptionFormDialog />
+      <OptionModal />
       <Container maxWidth="md" className={classes.container}>
         <Typography
           component="h2"
@@ -75,64 +91,17 @@ const DocktorIndex: React.FC<Props> = () => {
           title={title}
           columns={state.columns}
           data={entries.data}
-          editable={{
-            onRowAdd: (newData) =>
-              new Promise((resolve) => {
-                setTimeout(() => {
-                  resolve();
-                  const data = [...entries.data];
-                  console.log(data);
-                  const payload = {
-                    id: newData.id,
-                    name: newData.name,
-                  };
-                  axios
-                    .post(targetURL, newData, {
-                      params: {
-                        id: entries.data[0].id,
-                        name: entries.data[0].name,
-                      },
-                    })
-                    .then((res) => {
-                      console.log(res.data.data);
-                    });
-                }, 600);
-              }),
-            onRowUpdate: (newData, oldData) =>
-              new Promise((resolve) => {
-                setTimeout(() => {
-                  resolve();
-                  const data = [...entries.data];
-                  // @ts-ignore
-                  data[data.indexOf(oldData)] = newData;
-                  axios
-                    .put(`${targetURL}+${newData.id}/`, newData, {
-                      params: {
-                        id: entries.data[0].id,
-                        name: entries.data[0].name,
-                      },
-                    })
-                    .then((res) => console.log(res.data));
-                  setEntries({ ...entries, data });
-                }, 600);
-              }),
-            onRowDelete: (oldData) =>
-              new Promise((resolve) => {
-                setTimeout(() => {
-                  resolve();
-                  const data = [...entries.data];
-                  data.splice(data.indexOf(oldData), 1);
-                  axios
-                    .delete(`${targetURL}+${oldData.id}/`, {
-                      params: {
-                        id: entries.data[0].id,
-                      },
-                    })
-                    .then((res) => console.log(res.data));
-                  setEntries({ ...entries, data });
-                }, 600);
-              }),
-          }}
+          actions={[
+            {
+              icon: "save",
+              tooltip: "Save Option",
+              // onClick: (event, rowData: any) => console.log(rowData.id),
+              onClick: (event, rowData: any) =>
+                // console.log(dispatch(fetchAsyncGetOptions())),
+
+                console.log(editedOption),
+            },
+          ]}
         />
       </Container>
     </GenericTemplate>
