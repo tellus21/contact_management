@@ -7,19 +7,28 @@ import GenericTemplate from "../../common/templates/GenericTemplate";
 import axios from "axios";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import { OPTION_STATE, POST_OPTION, READ_OPTION } from "./optionTypes";
-import {
-  fetchAsyncGetOptions,
-  fetchAsyncCreateOption,
-  fetchAsyncDeleteOption,
-  fetchAsyncUpdateOption,
-  selectEditedOption,
-} from "./optionSlice";
+// import { OPTION_STATE, POST_OPTION, READ_OPTION } from "./optionTypes";
+// import {
+//   fetchAsyncGetOptions,
+//   fetchAsyncCreateOption,
+//   fetchAsyncDeleteOption,
+//   fetchAsyncUpdateOption,
+//   selectEditedOption,
+// } from "./optionSlice";
 import { AppDispatch } from "../../app/store";
-import OptionFormModal from "./components/OptionFormModal";
-import CommonMaterialTable from "../../common/components/CommonMaterialTable";
+// import OptionFormModal from "./components/OptionFormModal";
 
-type Props = {} & RouteComponentProps<{}>;
+// export interface DATA {
+//   id: number;
+//   name: string;
+// }
+
+type Props = {
+  title: string;
+  targetURL: string;
+  data: { id: number; name: string };
+  columns: { title: string; field: string }[];
+} & RouteComponentProps<{}>;
 
 const useStyles = makeStyles({
   root: {},
@@ -33,49 +42,34 @@ const useStyles = makeStyles({
 });
 
 const getToolbarStyle = () => {
-  const topAndbottom = 0;
+  const upAndDown = 0;
   const leftAndRight = 10;
 
   return {
-    padding: `${topAndbottom}px ${leftAndRight}px`,
+    padding: `${upAndDown}px ${leftAndRight}px`,
   };
 };
 
-const Options: React.FC<Props> = (props) => {
+const CommonMaterialTable: React.FC<Props> = (props) => {
   const classes = useStyles();
   const dispatch: AppDispatch = useDispatch();
-  const editedOption = useSelector(selectEditedOption);
+  // const editedOption = useSelector(selectEditedOption);
 
-  const title = "オプションマスタ";
-  const targetURL = `${process.env.REACT_APP_API_URL}/api/options/`;
+  const title = props.title;
+  const targetURL = props.targetURL;
+
   const [toolberStyle] = useState(getToolbarStyle);
-
   const localization = {
     header: { actions: "" },
   };
 
-  // const [entries, setEntries] = useState({
-  //   data: [
-  //     {
-  //       id: 0,
-  //       name: "",
-  //     },
-  //   ],
-  // });
+  const [entries, setEntries] = useState({
+    data: [props.data],
+  });
 
-  const entries = { id: 0, name: "" };
-
-  const columns = [
-    { title: "ID", field: "id" },
-    { title: "名前", field: "name" },
-  ];
-
-  // const [state] = React.useState({
-  //   columns: [
-  //     { title: "ID", field: "id" },
-  //     { title: "名前", field: "name" },
-  //   ],
-  // });
+  const [state] = useState({
+    columns: props.columns,
+  });
 
   useEffect(() => {
     axios
@@ -88,7 +82,7 @@ const Options: React.FC<Props> = (props) => {
             name: el.name,
           });
         });
-        // setEntries({ data: data });
+        setEntries({ data: data });
       })
       .catch(function (error) {
         console.log(error);
@@ -96,13 +90,7 @@ const Options: React.FC<Props> = (props) => {
   }, []);
 
   return (
-    <GenericTemplate title={""}>
-      <CommonMaterialTable
-        title="おぷます"
-        targetURL={targetURL}
-        data={entries}
-        columns={columns}
-      />
+    <div>
       <Container maxWidth="md" className={classes.container}>
         <Typography
           component="h2"
@@ -111,7 +99,7 @@ const Options: React.FC<Props> = (props) => {
           noWrap
           className={classes.pageTitle}
         ></Typography>
-        {/* <MaterialTable
+        <MaterialTable
           title={title}
           columns={state.columns}
           data={entries.data}
@@ -120,23 +108,21 @@ const Options: React.FC<Props> = (props) => {
             Toolbar: (props) => (
               <div>
                 <MTableToolbar {...props} />
-                <div style={toolberStyle}>
-                  <OptionFormModal />
-                </div>
+                <div style={toolberStyle}>{/* <OptionFormModal /> */}</div>
               </div>
             ),
           }}
-          actions={[
-            {
-              icon: "delete",
-              tooltip: "Delete Option",
-              onClick: (event, rowData: any) => console.log(editedOption),
-            },
-          ]}
-        /> */}
+          // actions={[
+          //   {
+          //     icon: "delete",
+          //     tooltip: "Delete Option",
+          //     onClick: (event, rowData: any) => console.log(editedOption),
+          //   },
+          // ]}
+        />
       </Container>
-    </GenericTemplate>
+    </div>
   );
 };
 
-export default withRouter(Options);
+export default withRouter(CommonMaterialTable);

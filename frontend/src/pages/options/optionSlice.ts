@@ -2,7 +2,7 @@ import { selectCount } from "./../../features/counter/counterSlice";
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import axios from "axios";
-import { OPTION_STATE, POST_OPTION, READ_OPTION } from "./optionTypes";
+import { OPTION, OPTION_STATE, POST_OPTION, READ_OPTION } from "./optionTypes";
 
 export const fetchAsyncGetOptions = createAsyncThunk(
   "option/getOption",
@@ -20,14 +20,13 @@ export const fetchAsyncGetOptions = createAsyncThunk(
 );
 
 export const fetchAsyncCreateOption = createAsyncThunk(
-  "option/createOption",
-  async (option: POST_OPTION) => {
-    const res = await axios.post<READ_OPTION>(
+  "optin/createOption",
+  async (name: string) => {
+    const res = await axios.post<OPTION>(
       `${process.env.REACT_APP_API_URL}/api/options/`,
-      option,
+      { name: name, is_deleted: false },
       {
         headers: {
-          "Content-Type": "application/json",
           // Authorization: `JWT ${localStorage.localJWT}`,
         },
       }
@@ -78,6 +77,9 @@ export const initialState: OPTION_STATE = {
   editedOption: {
     id: 0,
     name: "",
+    option: "",
+    description: "",
+    criteria: "",
   },
   selectedOption: {
     id: 0,
@@ -113,11 +115,10 @@ const optionSlice = createSlice({
     });
     builder.addCase(
       fetchAsyncCreateOption.fulfilled,
-      (state, action: PayloadAction<READ_OPTION>) => {
+      (state, action: PayloadAction<OPTION>) => {
         return {
           ...state,
-          options: [action.payload, ...state.options],
-          editedOption: initialState.editedOption,
+          option: [...state.options, action.payload],
         };
       }
     );
@@ -157,7 +158,7 @@ const optionSlice = createSlice({
 export const { editOption, selectOption } = optionSlice.actions;
 export const selectSelectedOption = (state: RootState) =>
   state.option.selectedOption;
-export const selectEditedoption = (state: RootState) =>
-  state.option.selectedOption;
+export const selectEditedOption = (state: RootState) =>
+  state.option.editedOption;
 export const selectOptions = (state: RootState) => state.option.options;
 export default optionSlice.reducer;
