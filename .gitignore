@@ -1,2 +1,3 @@
 app/db.sqlite3
 app/api/fixtures
+frontend/src/.eslintcache

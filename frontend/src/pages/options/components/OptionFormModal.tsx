@@ -5,10 +5,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "../../../app/store";
 import {
   initialState,
-  selectEditedOption,
-  fetchAsyncCreateOption,
+  // selectEditedOption,
+  // fetchAsyncCreateOption,
 } from "../optionSlice";
 import SaveIcon from "@material-ui/icons/Save";
+import { editOption } from "../../options/optionSlice";
 
 const useStyles = makeStyles((theme: Theme) => ({
   field: {
@@ -47,7 +48,7 @@ const OptionFormModal: React.FC = (props) => {
   const classes = useStyles();
   const dispatch: AppDispatch = useDispatch();
 
-  const editedOption = useSelector(selectEditedOption);
+  // const editedOption = useSelector(selectEditedOption);
 
   const [open, setOpen] = useState(false);
   const [modalStyle] = useState(getModalStyle);
@@ -59,11 +60,11 @@ const OptionFormModal: React.FC = (props) => {
   const handleClose = () => {
     setOpen(false);
   };
-  
-  const isDisabled =
-    editedOption.option.length === 0 ||
-    editedOption.description.length === 0 ||
-    editedOption.criteria.length === 0;
+
+  // const isDisabled =
+  //   editedOption.option.length === 0 ||
+  //   editedOption.description.length === 0 ||
+  //   editedOption.criteria.length === 0;
 
   const isOptDisabled = inputText.length === 0;
 
@@ -97,7 +98,9 @@ const OptionFormModal: React.FC = (props) => {
               startIcon={<SaveIcon />}
               disabled={isOptDisabled}
               onClick={() => {
-                dispatch(fetchAsyncCreateOption(inputText));
+                // dispatch(fetchAsyncCreateOption(inputText));
+                dispatch(editOption(initialState.editedOption));
+                console.log(dispatch(editOption(initialState.editedOption)));
                 handleClose();
               }}
             >

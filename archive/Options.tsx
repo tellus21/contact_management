@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { withRouter, RouteComponentProps } from "react-router-dom";
-import GenericTemplate from "../../common/templates/GenericTemplate";
-import CommonMaterialTable from "../../common/components/CommonMaterialTable";
-import { READ_OPTION, POST_OPTION } from "./optionTypes";
+import GenericTemplate from "../frontend/src/common/templates/GenericTemplate";
+import {
+  READ_OPTION,
+  POST_OPTION,
+  PUT_OPTION,
+} from "../frontend/src/pages/options/optionTypes";
 // import { selectEditedOption } from "./optionSlice";
-import { AppDispatch } from "../../app/store";
-import OptionFormModal from "../options/components/OptionFormModal";
-import { fetchAsyncGetOptions, fetchAsyncCreateTask } from "./optionSlice";
+import { AppDispatch } from "../frontend/src/app/store";
+import OptionFormModal from "../frontend/src/pages/options/components/OptionFormModal";
+import CommonMaterialTable from "../frontend/src/common/components/CommonMaterialTable";
+import fetchAsyncGetOptions from "../frontend/src/pages/options/optionSlice";
 
 type Props = {} & RouteComponentProps<{}>;
 
 const Options: React.FC<Props> = (props) => {
   const dispatch: AppDispatch = useDispatch();
-  // const getOption = dispatch(fetchAsyncGetOptions);
+  const getOption = dispatch(fetchAsyncGetOptions);
 
   // const editedOption = useSelector(selectEditedOption);
   useEffect(() => {
     const fetchBootLoader = async () => {
-      await console.log(dispatch(fetchAsyncGetOptions()));
+      // await dispatch(fetchAsyncGetOptions());
     };
     fetchBootLoader();
   }, [dispatch]);

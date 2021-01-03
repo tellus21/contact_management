@@ -1,15 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 // import './index.css';
-import { store } from './app/store';
-import { Provider } from 'react-redux';
-import * as serviceWorker from './serviceWorker';
+import { store } from "./app/store";
+import { Provider } from "react-redux";
+import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Companies from "./pages/companies/Companies"
-import Contacts from "./pages/contacts/Contacts"
-import Courses from "./pages/courses/Courses"
-import Options from "./pages/options/Options"
-import Users from "./pages/user/Users"
+import Companies from "./pages/companies/Companies";
+import Contacts from "./pages/contacts/Contacts";
+import Courses from "./pages/courses/Courses";
+import Options from "./pages/options/Options";
+import Users from "./pages/user/Users";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -25,7 +25,7 @@ ReactDOM.render(
       </Router>
     </Provider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change

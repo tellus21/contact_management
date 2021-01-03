@@ -12,11 +12,9 @@ type Props = {} & RouteComponentProps<{}>;
 const Companies: React.FC = () => {
   return (
     <GenericTemplate title={""}>
-      <div>
-      Companies
-    </div>
+      <div>Companies</div>
     </GenericTemplate>
-  )
-}
+  );
+};
 
-export default withRouter(Companies)
+export default withRouter(Companies);
