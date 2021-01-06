@@ -3,16 +3,23 @@ import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import MaterialTable, { MTableToolbar } from "material-table";
+import GenericTemplate from "../../common/templates/GenericTemplate";
 import axios from "axios";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { AppDispatch } from "../../app/store";
+import {
+  fetchAsyncGetOptions,
+  fetchAsyncCreateTask,
+  selectOptions,
+  getOptions
+} from "../../pages/options/optionSlice";
 
 type Props = {
   title: string;
   targetURL: string;
-  columns: {}[];
-  data: {};
+  data: { id: number; name: string };
+  columns: { title: string; field: string }[];
   components: {};
   createModal: {};
 } & RouteComponentProps<{}>;
@@ -39,22 +46,29 @@ const getToolbarStyle = () => {
 
 const CommonMaterialTable: React.FC<Props> = (props) => {
   const classes = useStyles();
-  // const editedOption = useSelector(selectEditedOption);
-  const [toolberStyle] = useState(getToolbarStyle);
+  const dispatch: AppDispatch = useDispatch();
 
   const title = props.title;
-  const columns = props.columns;
-  const localization = { header: { actions: "" } };
-  // const components = props.components;
-  const createModal = props.createModal;
+  const targetURL = props.targetURL;
+
+  const [toolberStyle] = useState(getToolbarStyle);
+  const localization = {
+    header: { actions: "" },
+  };
 
   const [entries, setEntries] = useState({
     data: [props.data],
   });
 
+  const [state] = useState({
+    columns: props.columns,
+  });
+
+  const gets = useSelector(selectOptions);
+
   useEffect(() => {
     axios
-      .get(props.targetURL)
+      .get(targetURL)
       .then((response) => {
         let data = Array();
         response.data.forEach((el: any) => {
@@ -82,27 +96,22 @@ const CommonMaterialTable: React.FC<Props> = (props) => {
         ></Typography>
         <MaterialTable
           title={title}
-          columns={columns}
+          columns={state.columns}
           data={entries.data}
           localization={localization}
           components={{
             Toolbar: (props) => (
               <div>
                 <MTableToolbar {...props} />
-                <div style={toolberStyle}> {createModal}</div>
+                <div style={toolberStyle}>{props.createModal}</div>
               </div>
             ),
           }}
           actions={[
             {
               icon: "delete",
-              tooltip: "Delete",
-              onClick: (event, rowData: any) => console.log("deleteClick"),
-            },
-            {
-              icon: "edit",
-              tooltip: "Edit",
-              onClick: (event, rowData: any) => console.log("editClick"),
+              tooltip: "Delete Option",
+              onClick: (event, rowData: any) => console.log(gets),
             },
           ]}
         />

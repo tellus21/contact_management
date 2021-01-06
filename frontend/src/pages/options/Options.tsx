@@ -7,20 +7,25 @@ import { READ_OPTION, POST_OPTION } from "./optionTypes";
 // import { selectEditedOption } from "./optionSlice";
 import { AppDispatch } from "../../app/store";
 import OptionFormModal from "../options/components/OptionFormModal";
-import { fetchAsyncGetOptions, fetchAsyncCreateTask } from "./optionSlice";
+import {
+  fetchAsyncGetOptions,
+  fetchAsyncCreateTask,
+  selectOptions,
+  getOptions
+} from "./optionSlice";
 
 type Props = {} & RouteComponentProps<{}>;
 
 const Options: React.FC<Props> = (props) => {
   const dispatch: AppDispatch = useDispatch();
-  // const getOption = dispatch(fetchAsyncGetOptions);
+  const gets = useSelector(getOptions);
 
-  // const editedOption = useSelector(selectEditedOption);
   useEffect(() => {
     const fetchBootLoader = async () => {
-      await console.log(dispatch(fetchAsyncGetOptions()));
+      dispatch(fetchAsyncGetOptions());
     };
     fetchBootLoader();
+    console.log(gets);
   }, [dispatch]);
 
   const title = "オプションマスタ";
@@ -31,11 +36,10 @@ const Options: React.FC<Props> = (props) => {
     { title: "名前", field: "name" },
   ];
   const createModal = <OptionFormModal />;
-
   return (
     <GenericTemplate title={""}>
       <CommonMaterialTable
-        title={title}
+        title={""}
         targetURL={targetURL}
         columns={columns}
         data={entries}
