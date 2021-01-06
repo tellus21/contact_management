@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import GenericTemplate from "../../common/templates/GenericTemplate";
@@ -11,38 +11,54 @@ import {
   fetchAsyncGetOptions,
   fetchAsyncCreateTask,
   selectOptions,
-  getOptions
+  getOptions,
+  selectEditedOption,
 } from "./optionSlice";
 
 type Props = {} & RouteComponentProps<{}>;
 
 const Options: React.FC<Props> = (props) => {
   const dispatch: AppDispatch = useDispatch();
-  const gets = useSelector(getOptions);
+  const options = useSelector(selectOptions);
 
+  // const sleep = (msec) => new Promise((resolve) => setTimeout(resolve, msec));
+
+  //最初に実行しておく＆dispatchの度に値を更新
   useEffect(() => {
     const fetchBootLoader = async () => {
+      // await sleep(100);
       await dispatch(fetchAsyncGetOptions());
     };
     fetchBootLoader();
-    console.log(gets);
+    console.log(options);
   }, [dispatch]);
 
   const title = "オプションマスタ";
-  const targetURL = `${process.env.REACT_APP_API_URL}/api/options/`;
-  const entries = { id: 0, name: "" };
   const columns = [
     { title: "ID", field: "id" },
     { title: "名前", field: "name" },
   ];
+
+  const data = [
+    {
+      id: options[0].id,
+      name: options[0].name,
+      // is_deleted: options[0].is_deleted,
+    },
+    {
+      id: 2,
+      name: "ddd",
+      // is_deleted: options[0].is_deleted,
+    },
+  ];
+
   const createModal = <OptionFormModal />;
   return (
     <GenericTemplate title={""}>
       <CommonMaterialTable
         title={""}
-        targetURL={targetURL}
         columns={columns}
-        data={entries}
+        data={data}
         components={""}
         createModal={createModal}
       />

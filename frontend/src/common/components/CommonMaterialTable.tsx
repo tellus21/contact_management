@@ -12,13 +12,12 @@ import {
   fetchAsyncGetOptions,
   fetchAsyncCreateTask,
   selectOptions,
-  getOptions
+  getOptions,
 } from "../../pages/options/optionSlice";
 
 type Props = {
   title: string;
-  targetURL: string;
-  data: { id: number; name: string };
+  data: {}[];
   columns: { title: string; field: string }[];
   components: {};
   createModal: {};
@@ -49,16 +48,17 @@ const CommonMaterialTable: React.FC<Props> = (props) => {
   const dispatch: AppDispatch = useDispatch();
 
   const title = props.title;
-  const targetURL = props.targetURL;
 
   const [toolberStyle] = useState(getToolbarStyle);
   const localization = {
     header: { actions: "" },
   };
 
-  const [entries, setEntries] = useState({
-    data: [props.data],
-  });
+  // const [entries, setEntries] = useState({
+  //   data: [props.data],
+  // });
+
+  const data = props.data;
 
   const [state] = useState({
     columns: props.columns,
@@ -66,23 +66,23 @@ const CommonMaterialTable: React.FC<Props> = (props) => {
 
   const gets = useSelector(selectOptions);
 
-  useEffect(() => {
-    axios
-      .get(targetURL)
-      .then((response) => {
-        let data = Array();
-        response.data.forEach((el: any) => {
-          data.push({
-            id: el.id,
-            name: el.name,
-          });
-        });
-        setEntries({ data: data });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(targetURL)
+  //     .then((response) => {
+  //       let data = Array();
+  //       response.data.forEach((el: any) => {
+  //         data.push({
+  //           id: el.id,
+  //           name: el.name,
+  //         });
+  //       });
+  //       setEntries({ data: data });
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // }, []);
 
   return (
     <div>
@@ -97,7 +97,7 @@ const CommonMaterialTable: React.FC<Props> = (props) => {
         <MaterialTable
           title={title}
           columns={state.columns}
-          data={entries.data}
+          data={data}
           localization={localization}
           components={{
             Toolbar: (props) => (
@@ -109,9 +109,14 @@ const CommonMaterialTable: React.FC<Props> = (props) => {
           }}
           actions={[
             {
+              icon: "edit",
+              tooltip: "Edit Option",
+              onClick: (event, rowData: any) => console.log("edit"),
+            },
+            {
               icon: "delete",
               tooltip: "Delete Option",
-              onClick: (event, rowData: any) => console.log(gets),
+              onClick: (event, rowData: any) => console.log("delete"),
             },
           ]}
         />
