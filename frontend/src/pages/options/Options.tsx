@@ -22,7 +22,7 @@ const Options: React.FC<Props> = (props) => {
 
   useEffect(() => {
     const fetchBootLoader = async () => {
-      dispatch(fetchAsyncGetOptions());
+      await dispatch(fetchAsyncGetOptions());
     };
     fetchBootLoader();
     console.log(gets);
