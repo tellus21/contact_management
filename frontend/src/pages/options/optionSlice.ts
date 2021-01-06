@@ -97,6 +97,10 @@ export const optionSlice = createSlice({
     editOption(state, action: PayloadAction<POST_OPTION>) {
       state.editedOption = action.payload;
     },
+    getOptions(state, action: PayloadAction<READ_OPTION[]>) {
+      state.options = action.payload;
+    },
+
     // selectOption(state, action: PayloadAction<READ_OPTION>) {
     //   state.selectedOption = action.payload;
     // },
@@ -117,7 +121,7 @@ export const optionSlice = createSlice({
   },
 });
 
-export const { editOption } = optionSlice.actions;
+export const { editOption, getOptions } = optionSlice.actions;
 // export const selectSelectedOption = (state: RootState) =>
 //   state.option.selectedOption;
 export const selectEditedOption = (state: RootState) =>
