@@ -7,6 +7,11 @@ import axios from "axios";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { AppDispatch } from "../../app/store";
+import {
+  fetchAsyncGetOptions,
+  selectOptions,
+  initialState,
+} from "../../pages/options/optionSlice";
 
 type Props = {
   title: string;
@@ -39,6 +44,8 @@ const getToolbarStyle = () => {
 
 const CommonMaterialTable: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const dispatch: AppDispatch = useDispatch();
+  const options = useSelector(selectOptions);
   // const editedOption = useSelector(selectEditedOption);
   const [toolberStyle] = useState(getToolbarStyle);
 
@@ -49,29 +56,52 @@ const CommonMaterialTable: React.FC<Props> = (props) => {
   const createModal = props.createModal;
 
   const [entries, setEntries] = useState({
-    data: [props.data],
+    data: [
+      {
+        id: "",
+        name: "",
+      },
+    ],
   });
 
+  const [state] = React.useState({
+    columns: [
+      { title: "ID", field: "id" },
+      { title: "名前", field: "name" },
+    ],
+  });
+
+
+  useEffect(() => {
+    axios
+      .get(props.targetURL)
+      .then((response) => {
+        let data = Array();
+        response.data.forEach((el: any) => {
+          data.push({
+            id: el.id,
+            name: el.name,
+          });
+        });
+        setEntries({ data: data });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
   // useEffect(() => {
-  //   axios
-  //     .get(props.targetURL)
-  //     .then((response) => {
-  //       let data = Array();
-  //       response.data.forEach((el: any) => {
-  //         data.push({
-  //           id: el.id,
-  //           name: el.name,
-  //         });
-  //       });
-  //       setEntries({ data: data });
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // }, []);
+  //   const fetchBootLoader = async () => {
+  //     await dispatch(fetchAsyncGetOptions());
+  //   };
+  //   fetchBootLoader();
+  //   console.log(options)
+  //   // setEntries({data:options})
+  // }, [options]);
 
   return (
     <div>
+      <button onClick={()=>console.log(options)}></button>
       <Container maxWidth="md" className={classes.container}>
         <Typography
           component="h2"

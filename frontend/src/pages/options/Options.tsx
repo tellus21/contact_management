@@ -30,7 +30,7 @@ const Options: React.FC<Props> = (props) => {
       await dispatch(fetchAsyncGetOptions());
     };
     fetchBootLoader();
-    console.log(options);
+    // console.log(options);
     setState((state) => ({
       ...state,
       options: options,
