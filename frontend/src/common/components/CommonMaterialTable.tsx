@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import MaterialTable, { MTableToolbar } from "material-table";
 import axios from "axios";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import { AppDispatch } from "../../app/store";
 
 type Props = {
   title: string;
   targetURL: string;
+  initialData: {}[];
   columns: {}[];
-  data: {};
   components: {};
   createModal: {};
 } & RouteComponentProps<{}>;
@@ -39,39 +37,64 @@ const getToolbarStyle = () => {
 
 const CommonMaterialTable: React.FC<Props> = (props) => {
   const classes = useStyles();
-  // const editedOption = useSelector(selectEditedOption);
   const [toolberStyle] = useState(getToolbarStyle);
 
   const title = props.title;
-  const columns = props.columns;
   const localization = { header: { actions: "" } };
-  // const components = props.components;
   const createModal = props.createModal;
 
+  // データ
   const [entries, setEntries] = useState({
-    data: [props.data],
+    data: props.initialData,
   });
 
-  // useEffect(() => {
-  //   axios
-  //     .get(props.targetURL)
-  //     .then((response) => {
-  //       let data = Array();
-  //       response.data.forEach((el: any) => {
-  //         data.push({
-  //           id: el.id,
-  //           name: el.name,
-  //         });
-  //       });
-  //       setEntries({ data: data });
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // }, []);
+  // 列
+  const columns = props.columns;
+
+  const fetchAsyncGetData = () => {
+    const aaaa = Object.keys(props.initialData[0]).pop();
+
+    const insertData = () => {
+      const initialDataAllKey: string[] = Object.keys(props.initialData[0]);
+      const deleteData: any = initialDataAllKey.pop();
+
+      const newa = initialDataAllKey.filter((word) => word !== "tableData");
+      // const newab = newa.forEach((element) => `${element}:el&${element},`);
+      const newab = newa.map(
+        // (element) => element + ":" + "el" + "[" + element + "]" + ","
+        (element) => `${element}:el[${element}],`
+      );
+
+      return newab;
+    };
+    // const insertData = Object.keys(props.initialData[0]).pop();
+
+    axios
+      .get(props.targetURL)
+      .then((response) => {
+        let data = Array();
+        response.data.forEach((el: any) => {
+          data.push({
+            id: el.id,
+            name: el.name,
+          });
+        });
+        console.log(insertData());
+        setEntries({ data: data });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  // レンダリング後の動作
+  useEffect(() => {
+    fetchAsyncGetData();
+  }, []);
 
   return (
     <div>
+      <button onClick={() => console.log()}></button>
       <Container maxWidth="md" className={classes.container}>
         <Typography
           component="h2"
