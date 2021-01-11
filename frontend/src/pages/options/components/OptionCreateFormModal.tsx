@@ -9,7 +9,9 @@ import {
   // fetchAsyncCreateOption,
 } from "../optionSlice";
 import SaveIcon from "@material-ui/icons/Save";
-import { editOption } from "../../options/optionSlice";
+import { editOption } from "../optionSlice";
+import axios from "axios";
+import { POST_OPTION } from "../optionTypes";
 
 const useStyles = makeStyles((theme: Theme) => ({
   field: {
@@ -46,30 +48,30 @@ const getModalStyle = () => {
 
 const OptionFormModal: React.FC = (props) => {
   const classes = useStyles();
-  const dispatch: AppDispatch = useDispatch();
-
-  // const editedOption = useSelector(selectEditedOption);
-
   const [open, setOpen] = useState(false);
   const [modalStyle] = useState(getModalStyle);
   const [inputText, setInputText] = useState("");
-
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
-
-  // const isDisabled =
-  //   editedOption.option.length === 0 ||
-  //   editedOption.description.length === 0 ||
-  //   editedOption.criteria.length === 0;
-
   const isOptDisabled = inputText.length === 0;
 
   const handleInputTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputText(e.target.value);
+  };
+
+  const fetchAsyncCreateOption = async (optionName: string) => {
+    const res = await axios.post<any>(
+      `${process.env.REACT_APP_API_URL}/api/options/`,
+      {
+        name: optionName,
+        is_deleted: false,
+      }
+    );
+    return res.data;
   };
 
   return (
@@ -98,9 +100,7 @@ const OptionFormModal: React.FC = (props) => {
               startIcon={<SaveIcon />}
               disabled={isOptDisabled}
               onClick={() => {
-                // dispatch(fetchAsyncCreateOption(inputText));
-                dispatch(editOption(initialState.editedOption));
-                console.log(dispatch(editOption(initialState.editedOption)));
+                console.log(fetchAsyncCreateOption(inputText));
                 handleClose();
               }}
             >

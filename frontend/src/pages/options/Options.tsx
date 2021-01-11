@@ -5,19 +5,18 @@ import MaterialTable, { MTableToolbar } from "material-table";
 import GenericTemplate from "../../common/templates/GenericTemplate";
 import axios from "axios";
 import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
-import OptionFormModal from "./components/OptionFormModal";
+import OptionCreateFormModal from "./components/OptionCreateFormModal";
 
 type Props = {} & RouteComponentProps<{}>;
 
 const useStyles = makeStyles({
   root: {},
+  pageTitle: {
+    marginBottom: 10,
+  },
   container: {
     paddingTop: 20,
     paddingBottom: 10,
-  },
-  pageTitle: {
-    marginBottom: 10,
   },
 });
 
@@ -33,39 +32,41 @@ const getToolbarStyle = () => {
 const Options: React.FC<Props> = (props) => {
   const classes = useStyles();
   const [toolberStyle] = useState(getToolbarStyle);
+
   const title = "オプションマスタ";
-
-  const targetURL = `${process.env.REACT_APP_API_URL}/api/options/`;
-  const localization = { header: { actions: "" } };
-
-  const createModal = <OptionFormModal />;
-
+  const createModal = <OptionCreateFormModal />;
   const [entries, setEntries] = useState({
     data: [
       {
         id: "",
+        create_at: "",
+        updated_at: "",
         name: "",
+        is_deleted: false,
       },
     ],
   });
 
-  const [state] = React.useState({
-    columns: [
-      { title: "ID", field: "id" },
-      { title: "名前", field: "name" },
-    ],
-  });
+  const columns = [
+    { title: "ID", field: "id" },
+    { title: "名前", field: "name" },
+  ];
 
+  // レンダリング時にデータをfetchする
   useEffect(() => {
+    const targetURL = `${process.env.REACT_APP_API_URL}/api/options/`;
     axios
       .get(targetURL)
       .then((response) => {
-        let data = Array();
+        let data: any = [];
+        // is_deletedがfalseデータのみで配列を作成
         response.data.forEach((el: any) => {
-          data.push({
-            id: el.id,
-            name: el.name,
-          });
+          if (el.is_deleted === false) {
+            data.push({
+              id: el.id,
+              name: el.name,
+            });
+          }
         });
         setEntries({ data: data });
       })
@@ -77,18 +78,13 @@ const Options: React.FC<Props> = (props) => {
   return (
     <GenericTemplate title={""}>
       <Container maxWidth="md" className={classes.container}>
-        <Typography
-          component="h2"
-          variant="h5"
-          color="inherit"
-          noWrap
-          className={classes.pageTitle}
-        ></Typography>
         <MaterialTable
           title={title}
-          columns={state.columns}
+          columns={columns}
           data={entries.data}
-          localization={localization}
+          localization={{
+            header: { actions: "" },
+          }}
           components={{
             Toolbar: (props) => (
               <div>
